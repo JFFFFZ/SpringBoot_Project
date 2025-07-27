@@ -1,0 +1,56 @@
+server:
+  port: 8500
+
+spring:
+  application:
+    name: spzx-server-gateway
+  data:
+    redis:
+      host: 192.168.6.100
+      port: 6399
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.6.100:8848
+#   enable=true  启动路由发现 从nacos中找到服务 然后进行接口调用
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+#     在网关中统一解决跨域问题  模版配置
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            # 允许请求中携带的头信息
+            allowedHeaders: "*"
+            # 运行跨域的请求方式
+            allowedMethods: "*"
+            # 跨域检测的有效期,单位s
+            maxAge: 36000
+#     路由配置
+      routes:
+        - id: service-product
+          uri: lb://service-product  # lb 负载均衡
+          predicates: # 断言
+            - Path=/*/product/**  # 路径断言
+
+        - id: service-user
+          uri: lb://service-user
+          predicates:
+            - Path=/*/user/**
+
+        - id: service-cart
+          uri: lb://service-cart
+          predicates:
+            - Path=/api/order/cart/**
+
+        - id: service-order
+          uri: lb://service-order
+          predicates:
+            - Path=/api/order/orderInfo/**
+
+        - id: service-pay
+          uri: lb://service-pay
+          predicates:
+            - Path=/api/order/alipay/**
