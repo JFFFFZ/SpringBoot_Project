@@ -8,12 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 //@SpringBootApplication(scanBasePackages = {"com.atguigu.spzx"})
 
-@EnableLogAspect   // 自定义注解  目的是导入@Import(value = LogAspect.class)
+// @EnableAspectJAutoProxy  两种方式 当前微服务/包及其子包下AOP  采用
+@EnableLogAspect   // 自定义注解  目的是导入@Import(value = LogAspect.class)   不在当前包及其子包
 @EnableScheduling // 开启定时任务功能
 @EnableConfigurationProperties(value = {UserProperties.class, MinioProperties.class})
 @SpringBootApplication
